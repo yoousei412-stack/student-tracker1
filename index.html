@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="学习追踪">
+    <title>学习追踪器</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    <style>
+        :root {
+          --bg: #F2F2F7;
+          --card: #FFFFFF;
+          --blue: #2D5A8E;
+          --blue-light: #EBF2FB;
+          --orange: #E8734A;
+          --orange-light: #FDF0EB;
+          --green: #34C759;
+          --green-dark: #248A3D;
+          --green-light: #E8F8ED;
+          --yellow: #FF9500;
+          --yellow-light: #FFF5E6;
+          --red: #FF3B30;
+          --red-light: #FFF0EF;
+          --text: #1C1C1E;
+          --text-mid: #6C6C70;
+          --text-light: #AEAEB2;
+          --border: #E5E5EA;
+          --tab-height: 80px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body {
+          font-family: -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
+          background: var(--bg);
+          color: var(--text);
+          min-height: 100vh;
+          padding-bottom: var(--tab-height);
+          -webkit-font-smoothing: antialiased;
+        }
+        
+        /* Scroll area */
+        .scroll-area { overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        
+        /* Top header */
+        .top-header {
+          background: var(--card);
+          padding: 16px 20px 12px;
+          border-bottom: 1px solid var(--border);
+          position: sticky; top: 0; z-index: 10;
+        }
+        .top-header h1 { font-size: 20px; font-weight: 700; }
+        .top-header p { font-size: 13px; color: var(--text-mid); margin-top: 2px; }
+        
+        /* Bottom tab bar */
+        .tab-bar {
+          position: fixed; bottom: 0; left: 0; right: 0;
+          height: var(--tab-height);
+          background: rgba(255,255,255,0.92);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border-top: 1px solid var(--border);
+          display: flex;
+          z-index: 100;
+          padding-bottom: env(safe-area-inset-bottom);
+        }
+        .tab-item {
+          flex: 1; display: flex; flex-direction: column; align-items: center;
+          justify-content: center; gap: 3px; cursor: pointer; padding: 8px 4px;
+          color: var(--text-light); transition: color 0.15s;
+        }
+        .tab-item.active { color: var(--blue); }
+        .tab-icon { font-size: 22px; line-height: 1; }
+        .tab-label { font-size: 10px; font-weight: 500; }
+        
+        /* Pages */
+        .page { display: none; padding: 16px; }
+        .page.active { display: block; }
+        
+        /* Cards */
+        .card {
+          background: var(--card);
+          border-radius: 14px;
+          padding: 16px;
+          margin-bottom: 12px;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+        .card-title {
+          font-size: 13px; font-weight: 700; color: var(--text-mid);
+          text-transform: uppercase; letter-spacing: 0.5px;
+          margin-bottom: 12px;
+        }
+        
+        /* Stat grid */
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+        .stat-card {
+          background: var(--card); border-radius: 14px; padding: 14px 16px;
+          box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+        .stat-num { font-size: 28px; font-weight: 800; line-height: 1; }
+        .stat-label { font-size: 12px; color: var(--text-mid); margin-top: 4px; }
+        .stat-card.blue .stat-num { color: var(--blue); }
+        .stat-card.green .stat-num { color: var(--green-dark); }
+        .stat-card.orange .stat-num { color: var(--orange); }
+        .stat-card.red .stat-num { color: var(--red); }
+        
+        /* Chart */
+        .chart-wrap { position: relative; height: 180px; }
+        
+        /* Form elements */
+        .form-group { margin-bottom: 14px; }
+        .form-label { font-size: 13px; font-weight: 600; color: var(--text-mid); margin-bottom: 6px; display: block; }
+        .form-input, .form-select, .form-textarea {
+          width: 100%; border: 1.5px solid var(--border); border-radius: 10px;
+          padding: 12px 14px; font-size: 16px; font-family: inherit; color: var(--text);
+          background: var(--bg); outline: none; appearance: none;
+          -webkit-appearance: none;
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+          border-color: var(--blue); background: #fff;
+        }
+        .form-textarea { resize: none; min-height: 88px; }
+        .form-select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+        
+        /* Stars */
+        .star-row { display: flex; gap: 8px; }
+        .star { font-size: 28px; cursor: pointer; color: #ddd; transition: color 0.1s; line-height: 1; }
+        .star.on { color: var(--yellow); }
+        .star-wrap { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); }
+        .star-wrap:last-child { border-bottom: none; }
+        .star-wrap-label { font-size: 15px; }
+        
+        /* Mastery buttons */
+        .mastery-group { display: flex; gap: 8px; }
+        .mastery-btn {
+          flex: 1; padding: 12px 6px; border: 2px solid var(--border); border-radius: 10px;
+          font-size: 13px; font-weight: 600; cursor: pointer; background: #fff;
+          text-align: center; transition: all 0.15s; line-height: 1.3;
+        }
+        .mastery-btn[data-val="0"].sel { background: var(--red-light); border-color: var(--red); color: var(--red); }
+        .mastery-btn[data-val="1"].sel { background: var(--yellow-light); border-color: var(--yellow); color: var(--yellow); }
+        .mastery-btn[data-val="2"].sel { background: var(--green-light); border-color: var(--green-dark); color: var(--green-dark); }
+        
+        /* Buttons */
+        .btn {
+          display: flex; align-items: center; justify-content: center; gap: 6px;
+          padding: 14px 20px; border-radius: 12px; font-size: 16px; font-weight: 600;
+          cursor: pointer; border: none; font-family: inherit; width: 100%;
+          margin-bottom: 10px; transition: opacity 0.15s;
+        }
+        .btn:active { opacity: 0.7; }
+        .btn-primary { background: var(--blue); color: #fff; }
+        .btn-ghost { background: var(--bg); color: var(--text-mid); }
+        
+        /* KP items */
+        .kp-phase-label {
+          font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px;
+          display: inline-block; margin: 4px 0 10px; letter-spacing: 0.5px;
+        }
+        .kp-phase-label.p1 { background: var(--red-light); color: var(--red); }
+        .kp-phase-label.p2 { background: var(--green-light); color: var(--green-dark); }
+        .kp-phase-label.p3 { background: var(--orange-light); color: var(--orange); }
+        .kp-item {
+          display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+          border-radius: 10px; margin-bottom: 8px; cursor: pointer;
+          border: 1.5px solid var(--border); background: #fff; transition: all 0.15s;
+        }
+        .kp-item.mastered { background: var(--green-light); border-color: var(--green); }
+        .kp-item.partial { background: var(--yellow-light); border-color: var(--yellow); }
+        .kp-check {
+          width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--border);
+          flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+          font-size: 12px; font-weight: 700;
+        }
+        .kp-item.mastered .kp-check { background: var(--green); border-color: var(--green); color: #fff; }
+        .kp-item.partial .kp-check { background: var(--yellow); border-color: var(--yellow); color: #fff; }
+        .kp-name { font-size: 14px; flex: 1; line-height: 1.4; }
+        .kp-session { font-size: 11px; color: var(--text-light); flex-shrink: 0; }
+        
+        /* Progress bar */
+        .prog-bar { height: 8px; background: var(--border); border-radius: 10px; overflow: hidden; margin-top: 8px; }
+        .prog-fill { height: 100%; border-radius: 10px; background: var(--blue); transition: width 0.4s; }
+        
+        /* Vocab */
+        .vocab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .vocab-card { border: 1.5px solid var(--border); border-radius: 10px; padding: 12px; background: #fff; }
+        .vocab-word { font-size: 16px; font-weight: 700; color: var(--blue); }
+        .vocab-meaning { font-size: 12px; color: var(--text-mid); margin-top: 2px; }
+        .vocab-status-badge {
+          display: inline-block; font-size: 11px; font-weight: 600;
+          padding: 3px 8px; border-radius: 10px; margin-top: 6px;
+        }
+        .vocab-status-badge.ok { background: var(--green-light); color: var(--green-dark); }
+        .vocab-status-badge.err { background: var(--red-light); color: var(--red); }
+        .vocab-status-badge.new { background: var(--blue-light); color: var(--blue); }
+        
+        /* History cards */
+        .lesson-hist-card {
+          background: var(--card); border-radius: 14px; padding: 16px;
+          margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+        .lesson-num-badge {
+          background: var(--blue); color: #fff; font-size: 12px; font-weight: 700;
+          padding: 3px 10px; border-radius: 20px; display: inline-block;
+        }
+        .tag {
+          font-size: 11px; font-weight: 600; padding: 4px 8px; border-radius: 8px;
+          display: inline-block;
+        }
+        .tag.blue { background: var(--blue-light); color: var(--blue); }
+        .tag.green { background: var(--green-light); color: var(--green-dark); }
+        .tag.red { background: var(--red-light); color: var(--red); }
+        .tag.yellow { background: var(--yellow-light); color: var(--yellow); }
+        
+        /* Empty */
+        .empty { text-align: center; padding: 48px 20px; color: var(--text-light); }
+        .empty-icon { font-size: 52px; margin-bottom: 12px; }
+        .empty-text { font-size: 14px; line-height: 1.6; }
+        
+        /* Modal */
+        .modal-overlay {
+          position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200;
+          display: none; align-items: flex-end; justify-content: center;
+          padding-bottom: env(safe-area-inset-bottom);
+        }
+        .modal-overlay.open { display: flex; }
+        .modal {
+          background: var(--card); border-radius: 20px 20px 0 0; padding: 24px 20px 32px;
+          width: 100%; max-width: 480px;
+        }
+        .modal-handle { width: 36px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 20px; }
+        .modal-title { font-size: 17px; font-weight: 700; margin-bottom: 16px; }
+        .modal-actions { display: flex; gap: 10px; margin-top: 16px; }
+        .modal-actions .btn { margin: 0; }
+        
+        /* Vocab add modal */
+        .vocab-add-btn {
+          display: flex; align-items: center; justify-content: center;
+          gap: 8px; background: var(--blue); color: #fff; border: none;
+          border-radius: 12px; padding: 14px; font-size: 16px; font-weight: 600;
+          font-family: inherit; cursor: pointer; width: 100%; margin-bottom: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Pages -->
+    <div id="page-overview" class="page active">
+        <div class="top-header">
+            <h1>📊 总览</h1>
+            <p>掌握全局，看清每一步进步</p>
+        </div>
+        <div style="padding:16px">
+            <div class="stat-grid">
+                <div class="stat-card blue">
+                    <div class="stat-num" id="s-lessons">0</div>
+                    <div class="stat-label">已上课节数</div>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-num" id="s-mastered">0</div>
+                    <div class="stat-label">已掌握知识点</div>
+                </div>
+                <div class="stat-card orange">
+                    <div class="stat-num" id="s-vocab">0</div>
+                    <div class="stat-label">词汇量</div>
+                </div>
+                <div class="stat-card red">
+                    <div class="stat-num" id="s-errors">0</div>
+                    <div class="stat-label">待巩固错词</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">📈 课堂表现趋势</div>
+                <div class="chart-wrap"><canvas id="chart-perf"></canvas></div>
+            </div>
+            <div class="card">
+                <div class="card-title">📚 知识点掌握</div>
+                <div class="chart-wrap"><canvas id="chart-kp"></canvas></div>
+            </div>
+            <div class="card">
+                <div class="card-title">🕐 最近记录</div>
+                <div id="recent-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-record" class="page">
+        <div class="top-header">
+            <h1>✏️ 记录本节课</h1>
+            <p>课后5分钟，记录她的进步</p>
+        </div>
+        <div style="padding:16px">
+            <div class="card">
+                <div class="form-group">
+                    <label class="form-label">第几节课</label>
+                    <select class="form-select" id="r-session"></select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">上课日期</label>
+                    <input type="date" class="form-input" id="r-date">
+                </div>
+                <div class="form-group" style="margin-bottom:0">
+                    <label class="form-label">本节课主题</label>
+                    <input type="text" class="form-input" id="r-topic" placeholder="例：一般过去时（肯定句）">
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🌟 课堂表现</div>
+                <div class="star-wrap">
+                    <div class="star-wrap-label">专注度</div>
+                    <div class="star-row" data-field="attention"></div>
+                </div>
+                <div class="star-wrap">
+                    <div class="star-wrap-label">配合度</div>
+                    <div class="star-row" data-field="cooperation"></div>
+                </div>
+                <div class="star-wrap" style="border-bottom:none">
+                    <div class="star-wrap-label">理解速度</div>
+                    <div class="star-row" data-field="speed"></div>
+                </div>
+                <div class="form-group" style="margin-top:14px;margin-bottom:0">
+                    <label class="form-label">课堂备注</label>
+                    <textarea class="form-textarea" id="r-class-note" placeholder="今天状态如何？有没有亮点？"></textarea>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">📚 知识点掌握</div>
+                <div id="r-kp-list"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">🔤 词汇情况</div>
+                <div class="form-group">
+                    <label class="form-label">本节新词（逗号分隔，格式：单词释义）</label>
+                    <textarea class="form-textarea" id="r-new-vocab" placeholder="watch看, go去, yesterday昨天"></textarea>
+                </div>
+                <div class="form-group" style="margin-bottom:0">
+                    <label class="form-label">检查上节——错词（逗号分隔）</label>
+                    <input type="text" class="form-input" id="r-error-vocab" placeholder="people, because">
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">📋 作业</div>
+                <div class="form-group">
+                    <label class="form-label">本节作业布置</label>
+                    <textarea class="form-textarea" id="r-hw" placeholder="词汇书List1；用过去时造5句话"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">上节作业完成情况</label>
+                    <div class="mastery-group" id="hw-status-group">
+                        <div class="mastery-btn" data-val="0" onclick="selMastery(this,'hw')">❌<br>未完成</div>
+                        <div class="mastery-btn" data-val="1" onclick="selMastery(this,'hw')">⚠️<br>部分完</div>
+                        <div class="mastery-btn" data-val="2" onclick="selMastery(this,'hw')">✅<br>已完成</div>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom:0">
+                    <label class="form-label">💬 她今天学会了什么（用她自己的话）</label>
+                    <textarea class="form-textarea" id="r-summary" placeholder="她说：学会了" 穿马甲"，动词加ed"></textarea>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" onclick="saveLesson()">💾 保存本节记录</button>
+            <button class="btn btn-ghost" onclick="clearForm()">清空重填</button>
+        </div>
+    </div>
+
+    <div id="page-knowledge" class="page">
+        <div class="top-header">
+            <h1>📚 知识点清单</h1>
+            <p>点击可更新掌握状态</p>
+        </div>
+        <div style="padding:16px">
+            <div class="card">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                    <div style="font-size:14px;color:var(--text-mid)">总进度</div>
+                    <div style="font-size:16px;font-weight:700;color:var(--blue)" id="kp-pct">0%</div>
+                </div>
+                <div class="prog-bar">
+                    <div class="prog-fill" id="kp-bar" style="width:0%"></div>
+                </div>
+                <div style="display:flex;gap:16px;margin-top:12px;font-size:12px;color:var(--text-mid)">
+                    <span>🟢 已掌握</span><span>🟡 部分掌握</span><span>⚪ 未学</span>
+                </div>
+            </div>
+            <div id="kp-list"></div>
+        </div>
+    </div>
+
+    <div id="page-vocab" class="page">
+        <div class="top-header">
+            <h1>🔤 词汇记录</h1>
+            <p>记录每一个认识的单词</p>
+        </div>
+        <div style="padding:16px">
+            <button class="vocab-add-btn" onclick="openVocabModal()">＋ 添加词汇</button>
+            <div class="card" style="padding:10px 14px;margin-bottom:12px">
+                <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:2px">
+                    <div class="tag blue" style="cursor:pointer;white-space:nowrap" onclick="filterVocab('all')" id="vf-all">全部</div>
+                    <div class="tag" style="cursor:pointer;white-space:nowrap;background:var(--blue-light);color:var(--blue)" onclick="filterVocab('new')" id="vf-new">新词</div>
+                    <div class="tag" style="cursor:pointer;white-space:nowrap" onclick="filterVocab('ok')" id="vf-ok">已掌握</div>
+                    <div class="tag" style="cursor:pointer;white-space:nowrap" onclick="filterVocab('err')" id="vf-err">待巩固</div>
+                </div>
+            </div>
+            <div class="vocab-grid" id="vocab-grid"></div>
+        </div>
+    </div>
+
+    <div id="page-history" class="page">
+        <div class="top-header">
+            <h1>📋 历史记录</h1>
+            <p>每节课的完整回顾</p>
+        </div>
+        <div style="padding:16px" id="history-list"></div>
+    </div>
+
+    <!-- Bottom Tab Bar -->
+    <div class="tab-bar">
+        <div class="tab-item active" onclick="nav('overview',this)">
+            <div class="tab-icon">📊</div>
+            <div class="tab-label">总览</div>
+        </div>
+        <div class="tab-item" onclick="nav('record',this)">
+            <div class="tab-icon">✏️</div>
+            <div class="tab-label">记录</div>
+        </div>
+        <div class="tab-item" onclick="nav('knowledge',this)">
+            <div class="tab-icon">📚</div>
+            <div class="tab-label">知识点</div>
+        </div>
+        <div class="tab-item" onclick="nav('vocab',this)">
+            <div class="tab-icon">🔤</div>
+            <div class="tab-label">词汇</div>
+        </div>
+        <div class="tab-item" onclick="nav('history',this)">
+            <div class="tab-icon">📋</div>
+            <div class="tab-label">历史</div>
+        </div>
+    </div>
+
+    <!-- KP Modal -->
+    <div class="modal-overlay" id="kp-modal" onclick="if(event.target===this)closeKpModal()">
+        <div class="modal">
+            <div class="modal-handle"></div>
+            <div class="modal-title" id="kp-modal-title"></div>
+            <div class="mastery-group">
+                <div class="mastery-btn" data-val="0" onclick="setKpStatus(0)">❌<br>未掌握</div>
+                <div class="mastery-btn" data-val="1" onclick="setKpStatus(1)">⚠️<br>部分掌握</div>
+                <div class="mastery-btn" data-val="2" onclick="setKpStatus(2)">✅<br>已掌握</div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-ghost" onclick="closeKpModal()">取消</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vocab Modal -->
+    <div class="modal-overlay" id="vocab-modal" onclick="if(event.target===this)closeVocabModal()">
+        <div class="modal">
+            <div class="modal-handle"></div>
+            <div class="modal-title">添加词汇</div>
+            <div class="form-group">
+                <label class="form-label">单词</label>
+                <input class="form-input" id="v-word" placeholder="例：watch">
+            </div>
+            <div class="form-group">
+                <label class="form-label">释义</label>
+                <input class="form-input" id="v-meaning" placeholder="例：看，观看">
+            </div>
+            <div class="form-group">
+                <label class="form-label">状态</label>
+                <select class="form-select" id="v-status">
+                    <option value="new">新词</option>
+                    <option value="ok">已掌握</option>
+                    <option value="err">待巩固</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-ghost" style="flex:1" onclick="closeVocabModal()">取消</button>
+                <button class="btn btn-primary" style="flex:2" onclick="addVocab()">添加</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const KP_PLAN = [
+          {id:'kp1',name:'一般过去时（肯定句）',session:1,phase:1},
+          {id:'kp2',name:'一般过去时（否定+疑问）',session:2,phase:1},
+          {id:'kp3',name:'一般现在时系统梳理',session:3,phase:1},
+          {id:'kp4',name:'现在进行时',session:4,phase:1},
+          {id:'kp5',name:'将来时（will/be going to）',session:5,phase:1},
+          {id:'kp6',name:'情态动词（can/must/should）',session:6,phase:1},
+          {id:'kp7',name:'基础句型与连词',session:7,phase:1},
+          {id:'kp8',name:'第1-7节综合复习',session:8,phase:1},
+          {id:'kp9',name:'词汇专项·高频词（上）',session:9,phase:2},
+          {id:'kp10',name:'词汇专项·高频词（下）',session:10,phase:2},
+          {id:'kp11',name:'阅读理解方法（上）',session:11,phase:2},
+          {id:'kp12',name:'阅读理解方法（下）',session:12,phase:2},
+          {id:'kp13',name:'完形填空技巧',session:13,phase:2},
+          {id:'kp14',name:'第二阶段综合练习',session:14,phase:2},
+          {id:'kp15',name:'基础写作·5句话框架',session:15,phase:3},
+          {id:'kp16',name:'写作修改与连接词',session:16,phase:3},
+          {id:'kp17',name:'听力技巧入门',session:17,phase:3},
+          {id:'kp18',name:'薄弱题型专项强化',session:18,phase:3},
+          {id:'kp19',name:'模拟真题综合测试',session:19,phase:3},
+          {id:'kp20',name:'复盘总结+开学计划',session:20,phase:3},
+        ];
+        const PHASE_NAMES={1:'第一阶段·语法地基',2:'第二阶段·词汇+阅读',3:'第三阶段·写作+综合'};
+        
+        function load(k,d){try{return JSON.parse(localStorage.getItem(k))||d;}catch(e){return d;}}
+        function save(k,v){localStorage.setItem(k,JSON.stringify(v));}
+        
+        let lessons=load('lessons',[]);
+        let kpStatus=load('kpStatus',{});
+        let vocab=load('vocab',[]);
+        let hwStatus=0;
+        let starVals={attention:0,cooperation:0,speed:0};
+        let currentKpId=null;
+        let vocabFilter='all';
+        let charts={};
+        
+        function nav(page,el){
+          document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+          document.querySelectorAll('.tab-item').forEach(t=>t.classList.remove('active'));
+          document.getElementById('page-'+page).classList.add('active');
+          el.classList.add('active');
+          window.scrollTo(0,0);
+          if(page==='overview')renderOverview();
+          if(page==='record')renderRecordForm();
+          if(page==='knowledge')renderKpList();
+          if(page==='vocab')renderVocab();
+          if(page==='history')renderHistory();
+        }
+        
+        function initStars(){
+          document.querySelectorAll('.star-row').forEach(row=>{
+            const field=row.dataset.field;
+            row.innerHTML='';
+            for(let i=1;i<=5;i++){
+              const s=document.createElement('span');
+              s.className='star'+(i<=starVals[field]?' on':'');
+              s.textContent='★';
+              s.onclick=()=>{starVals[field]=i;initStars();};
+              row.appendChild(s);
+            }
+          });
+        }
+        
+        function selMastery(el,type){
+          el.parentElement.querySelectorAll('.mastery-btn').forEach(b=>b.classList.remove('sel'));
+          el.classList.add('sel');
+          if(type==='hw')hwStatus=parseInt(el.dataset.val);
+        }
+        
+        function renderRecordForm(){
+          const sel=document.getElementById('r-session');
+          sel.innerHTML='<option value="">请选择节次</option>';
+          for(let i=1;i<=20;i++){
+            const exists=lessons.find(l=>l.session===i);
+            const opt=document.createElement('option');
+            opt.value=i;
+            opt.textContent=`第${i}节课`+(exists?' ✓':'');
+            sel.appendChild(opt);
+          }
+          document.getElementById('r-date').value=new Date().toISOString().split('T')[0];
+          starVals={attention:0,cooperation:0,speed:0};
+          hwStatus=0;
+          initStars();
+          renderKpCheckboxes();
+        }
+        
+        function renderKpCheckboxes(){
+          const el=document.getElementById('r-kp-list');
+          el.innerHTML='';
+          KP_PLAN.forEach(kp=>{
+            const div=document.createElement('div');
+            div.style.cssText='display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)';
+            div.innerHTML=`
+              <span style="font-size:11px;color:var(--text-light);width:32px;flex-shrink:0">第${kp.session}节</span>
+              <span style="flex:1;font-size:14px;line-height:1.4">${kp.name}</span>
+              <select class="form-select" style="width:120px;font-size:13px;padding:8px 28px 8px 8px" id="r-kp-${kp.id}">
+                <option value="">未涉及</option>
+                <option value="0">❌未掌握</option>
+                <option value="1">⚠️部分</option>
+                <option value="2">✅掌握</option>
+              </select>`;
+            el.appendChild(div);
+          });
+        }
+        
+        function clearForm(){
+          ['r-topic','r-class-note','r-new-vocab','r-error-vocab','r-hw','r-summary'].forEach(id=>document.getElementById(id).value='');
+          starVals={attention:0,cooperation:0,speed:0};hwStatus=0;
+          initStars();
+          document.querySelectorAll('#hw-status-group .mastery-btn').forEach(b=>b.classList.remove('sel'));
+          renderKpCheckboxes();
+        }
+        
+        function saveLesson(){
+          const session=parseInt(document.getElementById('r-session').value);
+          const date=document.getElementById('r-date').value;
+          const topic=document.getElementById('r-topic').value.trim();
+          if(!session||!date||!topic){alert('请填写节次、日期和主题');return;}
+          const kpUpdates={};
+          KP_PLAN.forEach(kp=>{
+            const val=document.getElementById('r-kp-'+kp.id).value;
+            if(val!=='')kpUpdates[kp.id]=parseInt(val);
+          });
+          Object.assign(kpStatus,kpUpdates);save('kpStatus',kpStatus);
+          const newVStr=document.getElementById('r-new-vocab').value;
+          let newVCount=0;
+          if(newVStr.trim()){
+            newVStr.split(',').forEach(item=>{
+              const parts=item.trim().split(/\s+/);
+              const word=parts[0].trim();
+              const meaning=parts.slice(1).join(' ').trim()||'';
+              if(word&&!vocab.find(v=>v.word.toLowerCase()===word.toLowerCase())){
+                vocab.push({word,meaning,status:'new',session,date});newVCount++;
+              }
+            });
+          }
+          const errStr=document.getElementById('r-error-vocab').value;
+          if(errStr.trim()){
+            errStr.split(',').forEach(w=>{
+              const word=w.trim();
+              const ex=vocab.find(v=>v.word.toLowerCase()===word.toLowerCase());
+              if(ex)ex.status='err';
+              else if(word)vocab.push({word,meaning:'',status:'err',session,date});
+            });
+          }
+          save('vocab',vocab);
+          const lesson={session,date,topic,attention:starVals.attention,cooperation:starVals.cooperation,speed:starVals.speed,classNote:document.getElementById('r-class-note').value,hw:document.getElementById('r-hw').value,hwStatus,summary:document.getElementById('r-summary').value,kpUpdates,newVocabCount:newVCount};
+          const idx=lessons.findIndex(l=>l.session===session);
+          if(idx>=0)lessons[idx]=lesson;else lessons.push(lesson);
+          lessons.sort((a,b)=>a.session-b.session);
+          save('lessons',lessons);
+          alert(`✅ 第${session}节课已保存！`);
+          clearForm();
+        }
+        
+        function renderOverview(){
+          document.getElementById('s-lessons').textContent=lessons.length;
+          document.getElementById('s-mastered').textContent=Object.values(kpStatus).filter(v=>v===2).length;
+          document.getElementById('s-vocab').textContent=vocab.filter(v=>v.status!=='err').length;
+          document.getElementById('s-errors').textContent=vocab.filter(v=>v.status==='err').length;
+          renderPerfChart();renderKpChart();
+          const el=document.getElementById('recent-list');
+          if(!lessons.length){el.innerHTML='<div class="empty"><div class="empty-icon">📝</div><div class="empty-text">还没有记录<br>去"记录"页面开始吧</div></div>';return;}
+          el.innerHTML=[...lessons].reverse().slice(0,3).map(l=>`
+            <div style="padding:10px 0;border-bottom:1px solid var(--border)">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                <div class="lesson-num-badge">第${l.session}节</div>
+                <div style="font-size:12px;color:var(--text-light)">${l.date}</div>
+                <div style="margin-left:auto;font-size:13px">${'★'.repeat(Math.round((l.attention+l.cooperation+l.speed)/3))}</div>
+              </div>
+              <div style="font-size:14px;font-weight:600">${l.topic}</div>
+              ${l.summary?`<div style="font-size:12px;color:var(--text-mid);margin-top:4px">💬 ${l.summary}</div>`:''}
+            </div>
+          `).join('');
+        }
+        
+        function renderPerfChart(){
+          const ctx=document.getElementById('chart-perf');
+          if(charts.perf)charts.perf.destroy();
+          if(!lessons.length)return;
+          charts.perf=new Chart(ctx,{type:'line',data:{labels:lessons.map(l=>`${l.session}节`),datasets:[
+            {label:'专注',data:lessons.map(l=>l.attention||0),borderColor:'#2D5A8E',tension:0.3,fill:false},
+            {label:'配合',data:lessons.map(l=>l.cooperation||0),borderColor:'#34C759',tension:0.3,fill:false},
+            {label:'理解',data:lessons.map(l=>l.speed||0),borderColor:'#E8734A',tension:0.3,fill:false},
+          ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:11},boxWidth:12}}},scales:{y:{min:0,max:5,ticks:{stepSize:1,font:{size:11}}}}}});
+        }
+        
+        function renderKpChart(){
+          const ctx=document.getElementById('chart-kp');
+          if(charts.kp)charts.kp.destroy();
+          const m=Object.values(kpStatus).filter(v=>v===2).length;
+          const p=Object.values(kpStatus).filter(v=>v===1).length;
+          charts.kp=new Chart(ctx,{type:'doughnut',data:{labels:['已掌握','部分掌握','未学'],datasets:[{data:[m,p,20-m-p],backgroundColor:['#34C759','#FF9500','#E5E5EA'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{font:{size:11},boxWidth:12}}}}});
+        }
+        
+        function renderKpList(){
+          const el=document.getElementById('kp-list');el.innerHTML='';
+          let mc=0;
+          [1,2,3].forEach(ph=>{
+            const card=document.createElement('div');card.className='card';
+            card.innerHTML=`<div class="kp-phase-label p${ph}">${PHASE_NAMES[ph]}</div><div id="kpp${ph}"></div>`;
+            el.appendChild(card);
+            const cont=card.querySelector(`#kpp${ph}`);
+            KP_PLAN.filter(k=>k.phase===ph).forEach(kp=>{
+              const st=kpStatus[kp.id];
+              if(st===2)mc++;
+              const item=document.createElement('div');
+              item.className=`kp-item${st===2?' mastered':st===1?' partial':''}`;
+              item.onclick=()=>openKpModal(kp.id,kp.name);
+              item.innerHTML=`<div class="kp-check">${st===2?'✓':st===1?'~':''}</div><div class="kp-name">${kp.name}</div><div class="kp-session">第${kp.session}节</div>`;
+              cont.appendChild(item);
+            });
+          });
+          const pct=Math.round(mc/20*100);
+          document.getElementById('kp-pct').textContent=pct+'%';
+          document.getElementById('kp-bar').style.width=pct+'%';
+        }
+        
+        function openKpModal(id,name){currentKpId=id;document.getElementById('kp-modal-title').textContent=name;document.getElementById('kp-modal').classList.add('open');}
+        function closeKpModal(){document.getElementById('kp-modal').classList.remove('open');}
+        function setKpStatus(val){if(!currentKpId)return;kpStatus[currentKpId]=val;save('kpStatus',kpStatus);closeKpModal();renderKpList();}
+        
+        function filterVocab(f){
+          vocabFilter=f;
+          ['all','new','ok','err'].forEach(k=>{
+            const el=document.getElementById('vf-'+k);
+            el.style.background=k===f?'var(--blue)':'var(--blue-light)';
+            el.style.color=k===f?'#fff':'var(--blue)';
+          });
+          renderVocab();
+        }
+        
+        function renderVocab(){
+          const list=vocabFilter==='all'?vocab:vocab.filter(v=>v.status===vocabFilter);
+          const grid=document.getElementById('vocab-grid');
+          if(!list.length){grid.innerHTML='<div style="color:var(--text-light);font-size:14px;padding:20px 0;grid-column:1/-1">暂无词汇</div>';return;}
+          grid.innerHTML=list.map((v,i)=>{
+            const ri=vocab.indexOf(v);
+            return`<div class="vocab-card">
+              <div class="vocab-word">${v.word}</div>
+              <div class="vocab-meaning">${v.meaning||'—'}</div>
+              <div style="margin-top:8px">
+                <select class="form-select" style="font-size:12px;padding:4px 24px 4px 8px" onchange="updateVocabStatus(${ri},this.value)">
+                  <option value="new" ${v.status==='new'?'selected':''}>新词</option>
+                  <option value="ok" ${v.status==='ok'?'selected':''}>已掌握</option>
+                  <option value="err" ${v.status==='err'?'selected':''}>待巩固</option>
+                </select>
+              </div>
+            </div>`;
+          }).join('');
+        }
+        
+        function updateVocabStatus(idx,val){vocab[idx].status=val;save('vocab',vocab);renderVocab();}
+        
+        function openVocabModal(){document.getElementById('vocab-modal').classList.add('open');}
+        function closeVocabModal(){document.getElementById('vocab-modal').classList.remove('open');}
+        function addVocab(){
+          const word=document.getElementById('v-word').value.trim();
+          const meaning=document.getElementById('v-meaning').value.trim();
+          const status=document.getElementById('v-status').value;
+          if(!word){alert('请输入单词');return;}
+          if(vocab.find(v=>v.word.toLowerCase()===word.toLowerCase())){alert('词库里已有这个词');return;}
+          vocab.push({word,meaning,status,session:null,date:new Date().toISOString().split('T')[0]});
+          save('vocab',vocab);
+          document.getElementById('v-word').value='';document.getElementById('v-meaning').value='';
+          closeVocabModal();renderVocab();
+        }
+        
+        function renderHistory(){
+          const el=document.getElementById('history-list');
+          if(!lessons.length){el.innerHTML='<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">还没有记录</div></div>';return;}
+          el.innerHTML=[...lessons].reverse().map(l=>{
+            const avg=((l.attention+l.cooperation+l.speed)/3).toFixed(1);
+            const masteredKps=Object.entries(l.kpUpdates||{}).filter(([,v])=>v===2).map(([id])=>KP_PLAN.find(k=>k.id===id)?.name).filter(Boolean);
+            return`<div class="lesson-hist-card">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+                <div class="lesson-num-badge">第${l.session}节</div>
+                <div style="font-size:12px;color:var(--text-light)">${l.date}</div>
+                <div style="margin-left:auto;font-size:13px;font-weight:700">${avg}⭐</div>
+              </div>
+              <div style="font-size:16px;font-weight:700;margin-bottom:8px">${l.topic}</div>
+              ${l.summary?`<div style="background:var(--blue-light);padding:10px 12px;border-radius:10px;font-size:13px;color:var(--blue);margin-bottom:8px">💬 "${l.summary}"</div>`:''}
+              <div style="display:flex;gap:6px;flex-wrap:wrap">
+                <span class="tag blue">专注${l.attention}⭐</span>
+                <span class="tag blue">配合${l.cooperation}⭐</span>
+                <span class="tag ${l.hwStatus===2?'green':l.hwStatus===1?'yellow':'red'}">${l.hwStatus===2?'✅作业完':l.hwStatus===1?'⚠️部分完':'❌未完成'}</span>
+                ${l.newVocabCount?`<span class="tag green">+${l.newVocabCount}新词</span>`:''}
+              </div>
+              ${masteredKps.length?`<div style="margin-top:8px;font-size:12px;color:var(--green-dark)">✓ ${masteredKps.join('、')}</div>`:''}
+              ${l.hw?`<div style="margin-top:8px;font-size:12px;color:var(--text-mid)">📋 ${l.hw}</div>`:''}
+            </div>`;
+          }).join('');
+        }
+        
+        renderOverview();renderRecordForm();
+    </script>
+</body>
+
+</html>
