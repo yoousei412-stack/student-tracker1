@@ -40,10 +40,6 @@
           -webkit-font-smoothing: antialiased;
         }
         
-        /* Scroll area */
-        .scroll-area { overflow-y: auto; -webkit-overflow-scrolling: touch; }
-        
-        /* Top header */
         .top-header {
           background: var(--card);
           padding: 16px 20px 12px;
@@ -53,7 +49,6 @@
         .top-header h1 { font-size: 20px; font-weight: 700; }
         .top-header p { font-size: 13px; color: var(--text-mid); margin-top: 2px; }
         
-        /* Bottom tab bar */
         .tab-bar {
           position: fixed; bottom: 0; left: 0; right: 0;
           height: var(--tab-height);
@@ -74,11 +69,9 @@
         .tab-icon { font-size: 22px; line-height: 1; }
         .tab-label { font-size: 10px; font-weight: 500; }
         
-        /* Pages */
         .page { display: none; padding: 16px; }
         .page.active { display: block; }
         
-        /* Cards */
         .card {
           background: var(--card);
           border-radius: 14px;
@@ -92,7 +85,6 @@
           margin-bottom: 12px;
         }
         
-        /* Stat grid */
         .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
         .stat-card {
           background: var(--card); border-radius: 14px; padding: 14px 16px;
@@ -105,12 +97,11 @@
         .stat-card.orange .stat-num { color: var(--orange); }
         .stat-card.red .stat-num { color: var(--red); }
         
-        /* Chart */
         .chart-wrap { position: relative; height: 180px; }
         
-        /* Form elements */
         .form-group { margin-bottom: 14px; }
         .form-label { font-size: 13px; font-weight: 600; color: var(--text-mid); margin-bottom: 6px; display: block; }
+        .form-hint { font-size: 11px; color: var(--text-light); margin-top: 4px; }
         .form-input, .form-select, .form-textarea {
           width: 100%; border: 1.5px solid var(--border); border-radius: 10px;
           padding: 12px 14px; font-size: 16px; font-family: inherit; color: var(--text);
@@ -121,9 +112,9 @@
           border-color: var(--blue); background: #fff;
         }
         .form-textarea { resize: none; min-height: 88px; }
+        .form-textarea.tall { min-height: 110px; }
         .form-select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
         
-        /* Stars */
         .star-row { display: flex; gap: 8px; }
         .star { font-size: 28px; cursor: pointer; color: #ddd; transition: color 0.1s; line-height: 1; }
         .star.on { color: var(--yellow); }
@@ -131,7 +122,6 @@
         .star-wrap:last-child { border-bottom: none; }
         .star-wrap-label { font-size: 15px; }
         
-        /* Mastery buttons */
         .mastery-group { display: flex; gap: 8px; }
         .mastery-btn {
           flex: 1; padding: 12px 6px; border: 2px solid var(--border); border-radius: 10px;
@@ -142,7 +132,6 @@
         .mastery-btn[data-val="1"].sel { background: var(--yellow-light); border-color: var(--yellow); color: var(--yellow); }
         .mastery-btn[data-val="2"].sel { background: var(--green-light); border-color: var(--green-dark); color: var(--green-dark); }
         
-        /* Buttons */
         .btn {
           display: flex; align-items: center; justify-content: center; gap: 6px;
           padding: 14px 20px; border-radius: 12px; font-size: 16px; font-weight: 600;
@@ -152,15 +141,29 @@
         .btn:active { opacity: 0.7; }
         .btn-primary { background: var(--blue); color: #fff; }
         .btn-ghost { background: var(--bg); color: var(--text-mid); }
+        .btn-small {
+          width: auto; padding: 8px 14px; font-size: 13px; margin: 0;
+          border-radius: 9px; display: inline-flex;
+        }
+        
+        /* Vocab check rows */
+        .vcheck-row {
+          display: flex; align-items: center; gap: 12px;
+          padding: 11px 0; border-bottom: 1px solid var(--border);
+        }
+        .vcheck-row:last-child { border-bottom: none; }
+        .vcheck-word { flex: 1; font-size: 15px; font-weight: 600; }
+        .vcheck-word small { font-weight: 400; color: var(--text-light); margin-left: 6px; font-size: 12px; }
+        .vcheck-toggle { display: flex; gap: 6px; }
+        .vcheck-btn {
+          padding: 7px 13px; border-radius: 9px; font-size: 13px; font-weight: 600;
+          border: 1.5px solid var(--border); background: #fff; cursor: pointer;
+          color: var(--text-mid); transition: all 0.15s;
+        }
+        .vcheck-btn.ok.sel { background: var(--green-light); border-color: var(--green-dark); color: var(--green-dark); }
+        .vcheck-btn.err.sel { background: var(--red-light); border-color: var(--red); color: var(--red); }
         
         /* KP items */
-        .kp-phase-label {
-          font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px;
-          display: inline-block; margin: 4px 0 10px; letter-spacing: 0.5px;
-        }
-        .kp-phase-label.p1 { background: var(--red-light); color: var(--red); }
-        .kp-phase-label.p2 { background: var(--green-light); color: var(--green-dark); }
-        .kp-phase-label.p3 { background: var(--orange-light); color: var(--orange); }
         .kp-item {
           display: flex; align-items: center; gap: 12px; padding: 12px 14px;
           border-radius: 10px; margin-bottom: 8px; cursor: pointer;
@@ -176,26 +179,17 @@
         .kp-item.mastered .kp-check { background: var(--green); border-color: var(--green); color: #fff; }
         .kp-item.partial .kp-check { background: var(--yellow); border-color: var(--yellow); color: #fff; }
         .kp-name { font-size: 14px; flex: 1; line-height: 1.4; }
+        .kp-name.placeholder { color: var(--text-light); }
         .kp-session { font-size: 11px; color: var(--text-light); flex-shrink: 0; }
         
-        /* Progress bar */
         .prog-bar { height: 8px; background: var(--border); border-radius: 10px; overflow: hidden; margin-top: 8px; }
         .prog-fill { height: 100%; border-radius: 10px; background: var(--blue); transition: width 0.4s; }
         
-        /* Vocab */
         .vocab-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .vocab-card { border: 1.5px solid var(--border); border-radius: 10px; padding: 12px; background: #fff; }
         .vocab-word { font-size: 16px; font-weight: 700; color: var(--blue); }
         .vocab-meaning { font-size: 12px; color: var(--text-mid); margin-top: 2px; }
-        .vocab-status-badge {
-          display: inline-block; font-size: 11px; font-weight: 600;
-          padding: 3px 8px; border-radius: 10px; margin-top: 6px;
-        }
-        .vocab-status-badge.ok { background: var(--green-light); color: var(--green-dark); }
-        .vocab-status-badge.err { background: var(--red-light); color: var(--red); }
-        .vocab-status-badge.new { background: var(--blue-light); color: var(--blue); }
         
-        /* History cards */
         .lesson-hist-card {
           background: var(--card); border-radius: 14px; padding: 16px;
           margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);
@@ -213,7 +207,6 @@
         .tag.red { background: var(--red-light); color: var(--red); }
         .tag.yellow { background: var(--yellow-light); color: var(--yellow); }
         
-        /* Empty */
         .empty { text-align: center; padding: 48px 20px; color: var(--text-light); }
         .empty-icon { font-size: 52px; margin-bottom: 12px; }
         .empty-text { font-size: 14px; line-height: 1.6; }
@@ -222,19 +215,38 @@
         .modal-overlay {
           position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200;
           display: none; align-items: flex-end; justify-content: center;
-          padding-bottom: env(safe-area-inset-bottom);
         }
         .modal-overlay.open { display: flex; }
         .modal {
-          background: var(--card); border-radius: 20px 20px 0 0; padding: 24px 20px 32px;
-          width: 100%; max-width: 480px;
+          background: var(--card); border-radius: 20px 20px 0 0; padding: 24px 20px;
+          padding-bottom: calc(32px + env(safe-area-inset-bottom));
+          width: 100%; max-width: 480px; max-height: 85vh; overflow-y: auto;
+          -webkit-overflow-scrolling: touch;
         }
         .modal-handle { width: 36px; height: 4px; background: var(--border); border-radius: 2px; margin: 0 auto 20px; }
         .modal-title { font-size: 17px; font-weight: 700; margin-bottom: 16px; }
         .modal-actions { display: flex; gap: 10px; margin-top: 16px; }
         .modal-actions .btn { margin: 0; }
         
-        /* Vocab add modal */
+        /* Detail view */
+        .detail-section { margin-bottom: 16px; }
+        .detail-section-title {
+          font-size: 13px; font-weight: 700; color: var(--blue);
+          margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
+        }
+        .detail-content {
+          font-size: 14px; line-height: 1.7; color: var(--text);
+          white-space: pre-wrap; word-break: break-word;
+          background: var(--bg); border-radius: 10px; padding: 12px 14px;
+        }
+        .detail-content.empty-field { color: var(--text-light); }
+        
+        .hist-link {
+          display: flex; align-items: center; justify-content: space-between;
+          margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);
+          color: var(--blue); font-size: 14px; font-weight: 600;
+        }
+        
         .vocab-add-btn {
           display: flex; align-items: center; justify-content: center;
           gap: 8px; background: var(--blue); color: #fff; border: none;
@@ -246,7 +258,7 @@
 
 <body>
 
-    <!-- Pages -->
+    <!-- ===== 总览 ===== -->
     <div id="page-overview" class="page active">
         <div class="top-header">
             <h1>📊 总览</h1>
@@ -272,6 +284,18 @@
                 </div>
             </div>
             <div class="card">
+                <div class="card-title">📝 作业完成情况</div>
+                <div style="display:flex;align-items:center;gap:14px">
+                    <div style="font-size:32px;font-weight:800;color:var(--blue)" id="hw-rate">—</div>
+                    <div style="flex:1">
+                        <div style="font-size:13px;color:var(--text-mid)" id="hw-summary">还没有作业记录</div>
+                        <div class="prog-bar">
+                            <div class="prog-fill" id="hw-bar" style="width:0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
                 <div class="card-title">📈 课堂表现趋势</div>
                 <div class="chart-wrap"><canvas id="chart-perf"></canvas></div>
             </div>
@@ -283,9 +307,18 @@
                 <div class="card-title">🕐 最近记录</div>
                 <div id="recent-list"></div>
             </div>
+            <div class="card">
+                <div class="card-title">💾 数据备份</div>
+                <p style="font-size:12px;color:var(--text-mid);line-height:1.6;margin-bottom:12px">数据存在手机浏览器里，清除Safari缓存会丢失。建议每隔几节课导出一次，粘贴到备忘录保存。</p>
+                <div style="display:flex;gap:10px">
+                    <button class="btn btn-primary btn-small" style="flex:1" onclick="exportData()">导出备份</button>
+                    <button class="btn btn-ghost btn-small" style="flex:1" onclick="openImportModal()">导入恢复</button>
+                </div>
+            </div>
         </div>
     </div>
 
+    <!-- ===== 记录 ===== -->
     <div id="page-record" class="page">
         <div class="top-header">
             <h1>✏️ 记录本节课</h1>
@@ -295,7 +328,7 @@
             <div class="card">
                 <div class="form-group">
                     <label class="form-label">第几节课</label>
-                    <select class="form-select" id="r-session"></select>
+                    <select class="form-select" id="r-session" onchange="onSessionChange()"></select>
                 </div>
                 <div class="form-group">
                     <label class="form-label">上课日期</label>
@@ -304,6 +337,20 @@
                 <div class="form-group" style="margin-bottom:0">
                     <label class="form-label">本节课主题</label>
                     <input type="text" class="form-input" id="r-topic" placeholder="例：一般过去时（肯定句）">
+                </div>
+            </div>
+
+            <div class="card" id="vcheck-card" style="display:none">
+                <div class="card-title">✅ 检查上节词汇</div>
+                <p style="font-size:12px;color:var(--text-mid);margin-bottom:10px" id="vcheck-hint"></p>
+                <div id="vcheck-list"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">📄 上课内容</div>
+                <div class="form-group" style="margin-bottom:0">
+                    <textarea class="form-textarea tall" id="r-content" placeholder="1. 一般过去时的概念&#10;2. 动词的变化规则&#10;3. 句式结构及举例&#10;4. 时间标志词"></textarea>
+                    <div class="form-hint">分条填写，给家长的反馈会按这个格式展示</div>
                 </div>
             </div>
 
@@ -322,24 +369,20 @@
                     <div class="star-row" data-field="speed"></div>
                 </div>
                 <div class="form-group" style="margin-top:14px;margin-bottom:0">
-                    <label class="form-label">课堂备注</label>
-                    <textarea class="form-textarea" id="r-class-note" placeholder="今天状态如何？有没有亮点？"></textarea>
+                    <label class="form-label">课堂表现及掌握程度（文字描述）</label>
+                    <textarea class="form-textarea" id="r-performance" placeholder="课堂专注力较高，能及时消化新内容&#10;做题准确率较高&#10;需巩固不规则动词变化"></textarea>
                 </div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">📚 知识点掌握</div>
-                <div id="r-kp-list"></div>
             </div>
 
             <div class="card">
                 <div class="card-title">🔤 词汇情况</div>
                 <div class="form-group">
-                    <label class="form-label">本节新词（逗号分隔，格式：单词释义）</label>
-                    <textarea class="form-textarea" id="r-new-vocab" placeholder="watch看, go去, yesterday昨天"></textarea>
+                    <label class="form-label">本节新词（逗号分隔，格式：单词 释义）</label>
+                    <textarea class="form-textarea" id="r-new-vocab" placeholder="watch 看, go 去, yesterday 昨天"></textarea>
+                    <div class="form-hint">这里录入的词，下节课会自动出现在"检查上节词汇"里</div>
                 </div>
                 <div class="form-group" style="margin-bottom:0">
-                    <label class="form-label">检查上节——错词（逗号分隔）</label>
+                    <label class="form-label">补充错词（逗号分隔，可不填）</label>
                     <input type="text" class="form-input" id="r-error-vocab" placeholder="people, because">
                 </div>
             </div>
@@ -348,7 +391,7 @@
                 <div class="card-title">📋 作业</div>
                 <div class="form-group">
                     <label class="form-label">本节作业布置</label>
-                    <textarea class="form-textarea" id="r-hw" placeholder="词汇书List1；用过去时造5句话"></textarea>
+                    <textarea class="form-textarea" id="r-hw" placeholder="1. 词汇书List1前六个单词&#10;2. 打印的练习题&#10;3. 巩固动词过去式变化"></textarea>
                 </div>
                 <div class="form-group">
                     <label class="form-label">上节作业完成情况</label>
@@ -358,9 +401,13 @@
                         <div class="mastery-btn" data-val="2" onclick="selMastery(this,'hw')">✅<br>已完成</div>
                     </div>
                 </div>
-                <div class="form-group" style="margin-bottom:0">
+                <div class="form-group">
                     <label class="form-label">💬 她今天学会了什么（用她自己的话）</label>
-                    <textarea class="form-textarea" id="r-summary" placeholder="她说：学会了" 穿马甲"，动词加ed"></textarea>
+                    <textarea class="form-textarea" id="r-summary" placeholder='她说：学会了"穿马甲"，动词加ed'></textarea>
+                </div>
+                <div class="form-group" style="margin-bottom:0">
+                    <label class="form-label">📌 下节课计划</label>
+                    <textarea class="form-textarea" id="r-nextplan" placeholder="讲现在进行时；检查List1前6个词"></textarea>
                 </div>
             </div>
 
@@ -369,10 +416,11 @@
         </div>
     </div>
 
+    <!-- ===== 知识点 ===== -->
     <div id="page-knowledge" class="page">
         <div class="top-header">
             <h1>📚 知识点清单</h1>
-            <p>点击可更新掌握状态</p>
+            <p>点击填写内容、更新掌握状态</p>
         </div>
         <div style="padding:16px">
             <div class="card">
@@ -387,10 +435,13 @@
                     <span>🟢 已掌握</span><span>🟡 部分掌握</span><span>⚪ 未学</span>
                 </div>
             </div>
-            <div id="kp-list"></div>
+            <div class="card">
+                <div id="kp-list"></div>
+            </div>
         </div>
     </div>
 
+    <!-- ===== 词汇 ===== -->
     <div id="page-vocab" class="page">
         <div class="top-header">
             <h1>🔤 词汇记录</h1>
@@ -402,18 +453,19 @@
                 <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:2px">
                     <div class="tag blue" style="cursor:pointer;white-space:nowrap" onclick="filterVocab('all')" id="vf-all">全部</div>
                     <div class="tag" style="cursor:pointer;white-space:nowrap;background:var(--blue-light);color:var(--blue)" onclick="filterVocab('new')" id="vf-new">新词</div>
-                    <div class="tag" style="cursor:pointer;white-space:nowrap" onclick="filterVocab('ok')" id="vf-ok">已掌握</div>
-                    <div class="tag" style="cursor:pointer;white-space:nowrap" onclick="filterVocab('err')" id="vf-err">待巩固</div>
+                    <div class="tag" style="cursor:pointer;white-space:nowrap;background:var(--blue-light);color:var(--blue)" onclick="filterVocab('ok')" id="vf-ok">已掌握</div>
+                    <div class="tag" style="cursor:pointer;white-space:nowrap;background:var(--blue-light);color:var(--blue)" onclick="filterVocab('err')" id="vf-err">待巩固</div>
                 </div>
             </div>
             <div class="vocab-grid" id="vocab-grid"></div>
         </div>
     </div>
 
+    <!-- ===== 历史 ===== -->
     <div id="page-history" class="page">
         <div class="top-header">
             <h1>📋 历史记录</h1>
-            <p>每节课的完整回顾</p>
+            <p>点击任意一节课查看完整详情</p>
         </div>
         <div style="padding:16px" id="history-list"></div>
     </div>
@@ -446,14 +498,22 @@
     <div class="modal-overlay" id="kp-modal" onclick="if(event.target===this)closeKpModal()">
         <div class="modal">
             <div class="modal-handle"></div>
-            <div class="modal-title" id="kp-modal-title"></div>
-            <div class="mastery-group">
-                <div class="mastery-btn" data-val="0" onclick="setKpStatus(0)">❌<br>未掌握</div>
-                <div class="mastery-btn" data-val="1" onclick="setKpStatus(1)">⚠️<br>部分掌握</div>
-                <div class="mastery-btn" data-val="2" onclick="setKpStatus(2)">✅<br>已掌握</div>
+            <div class="modal-title" id="kp-modal-title">第几节课</div>
+            <div class="form-group">
+                <label class="form-label">知识点内容</label>
+                <input class="form-input" id="kp-name-input" placeholder="例：一般过去时（肯定句）">
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+                <label class="form-label">掌握状态</label>
+                <div class="mastery-group" id="kp-status-group">
+                    <div class="mastery-btn" data-val="0" onclick="selKpStatus(this,0)">❌<br>未掌握</div>
+                    <div class="mastery-btn" data-val="1" onclick="selKpStatus(this,1)">⚠️<br>部分掌握</div>
+                    <div class="mastery-btn" data-val="2" onclick="selKpStatus(this,2)">✅<br>已掌握</div>
+                </div>
             </div>
             <div class="modal-actions">
-                <button class="btn btn-ghost" onclick="closeKpModal()">取消</button>
+                <button class="btn btn-ghost" style="flex:1" onclick="closeKpModal()">取消</button>
+                <button class="btn btn-primary" style="flex:2" onclick="saveKp()">保存</button>
             </div>
         </div>
     </div>
@@ -486,43 +546,93 @@
         </div>
     </div>
 
+    <!-- Lesson Detail Modal -->
+    <div class="modal-overlay" id="detail-modal" onclick="if(event.target===this)closeDetailModal()">
+        <div class="modal">
+            <div class="modal-handle"></div>
+            <div id="detail-body"></div>
+            <div class="modal-actions">
+                <button class="btn btn-ghost" style="flex:1" onclick="closeDetailModal()">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div class="modal-overlay" id="import-modal" onclick="if(event.target===this)closeImportModal()">
+        <div class="modal">
+            <div class="modal-handle"></div>
+            <div class="modal-title">导入备份数据</div>
+            <div class="form-group">
+                <label class="form-label">粘贴之前导出的备份文本</label>
+                <textarea class="form-textarea tall" id="import-text" placeholder="把备忘录里保存的备份文本粘贴到这里"></textarea>
+                <div class="form-hint">⚠️ 导入会覆盖当前所有数据，请确认备份文本无误</div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-ghost" style="flex:1" onclick="closeImportModal()">取消</button>
+                <button class="btn btn-primary" style="flex:2" onclick="importData()">确认导入</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div class="modal-overlay" id="export-modal" onclick="if(event.target===this)closeExportModal()">
+        <div class="modal">
+            <div class="modal-handle"></div>
+            <div class="modal-title">导出备份</div>
+            <div class="form-group">
+                <label class="form-label">长按下方文本框 → 全选 → 复制，粘贴到备忘录保存</label>
+                <textarea class="form-textarea tall" id="export-text" readonly onclick="this.select()"></textarea>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-primary" style="flex:1" onclick="closeExportModal()">完成</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        const KP_PLAN = [
-          {id:'kp1',name:'一般过去时（肯定句）',session:1,phase:1},
-          {id:'kp2',name:'一般过去时（否定+疑问）',session:2,phase:1},
-          {id:'kp3',name:'一般现在时系统梳理',session:3,phase:1},
-          {id:'kp4',name:'现在进行时',session:4,phase:1},
-          {id:'kp5',name:'将来时（will/be going to）',session:5,phase:1},
-          {id:'kp6',name:'情态动词（can/must/should）',session:6,phase:1},
-          {id:'kp7',name:'基础句型与连词',session:7,phase:1},
-          {id:'kp8',name:'第1-7节综合复习',session:8,phase:1},
-          {id:'kp9',name:'词汇专项·高频词（上）',session:9,phase:2},
-          {id:'kp10',name:'词汇专项·高频词（下）',session:10,phase:2},
-          {id:'kp11',name:'阅读理解方法（上）',session:11,phase:2},
-          {id:'kp12',name:'阅读理解方法（下）',session:12,phase:2},
-          {id:'kp13',name:'完形填空技巧',session:13,phase:2},
-          {id:'kp14',name:'第二阶段综合练习',session:14,phase:2},
-          {id:'kp15',name:'基础写作·5句话框架',session:15,phase:3},
-          {id:'kp16',name:'写作修改与连接词',session:16,phase:3},
-          {id:'kp17',name:'听力技巧入门',session:17,phase:3},
-          {id:'kp18',name:'薄弱题型专项强化',session:18,phase:3},
-          {id:'kp19',name:'模拟真题综合测试',session:19,phase:3},
-          {id:'kp20',name:'复盘总结+开学计划',session:20,phase:3},
-        ];
-        const PHASE_NAMES={1:'第一阶段·语法地基',2:'第二阶段·词汇+阅读',3:'第三阶段·写作+综合'};
+        /* ===== 数据结构 v2：多学生预留 =====
+        appData = {
+          version: 2,
+          currentStudent: 'default',
+          students: {
+            default: {
+              name: '学生',
+              lessons: [ {session,date,topic,content,attention,cooperation,speed,performance,hw,hwStatus,summary,nextPlan,newVocabCount,vocabCheck:{word:bool}} ],
+              kpList: [ {session:1,name:'',status:null} x20 ],
+              vocab: [ {word,meaning,status,session,date} ]
+            }
+          }
+        }
+        */
+        const TOTAL_SESSIONS = 20;
+        const STORE_KEY = 'trackerData_v2';
         
-        function load(k,d){try{return JSON.parse(localStorage.getItem(k))||d;}catch(e){return d;}}
-        function save(k,v){localStorage.setItem(k,JSON.stringify(v));}
+        function freshKpList(){
+          return Array.from({length:TOTAL_SESSIONS},(_,i)=>({session:i+1,name:'',status:null}));
+        }
+        function freshStudent(){
+          return {name:'学生',lessons:[],kpList:freshKpList(),vocab:[]};
+        }
+        function loadApp(){
+          try{
+            const d = JSON.parse(localStorage.getItem(STORE_KEY));
+            if(d && d.version===2 && d.students) return d;
+          }catch(e){}
+          return {version:2,currentStudent:'default',students:{default:freshStudent()}};
+        }
+        let appData = loadApp();
+        function stu(){ return appData.students[appData.currentStudent]; }
+        function persist(){ localStorage.setItem(STORE_KEY, JSON.stringify(appData)); }
         
-        let lessons=load('lessons',[]);
-        let kpStatus=load('kpStatus',{});
-        let vocab=load('vocab',[]);
-        let hwStatus=0;
-        let starVals={attention:0,cooperation:0,speed:0};
-        let currentKpId=null;
-        let vocabFilter='all';
-        let charts={};
+        let hwStatus = null;
+        let starVals = {attention:0,cooperation:0,speed:0};
+        let currentKpIdx = null;
+        let kpModalStatus = null;
+        let vocabFilter = 'all';
+        let charts = {};
+        let vcheckState = {}; // {word: 'ok'|'err'|null}
         
+        /* ===== 导航 ===== */
         function nav(page,el){
           document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
           document.querySelectorAll('.tab-item').forEach(t=>t.classList.remove('active'));
@@ -536,6 +646,7 @@
           if(page==='history')renderHistory();
         }
         
+        /* ===== 星星 ===== */
         function initStars(){
           document.querySelectorAll('.star-row').forEach(row=>{
             const field=row.dataset.field;
@@ -556,48 +667,86 @@
           if(type==='hw')hwStatus=parseInt(el.dataset.val);
         }
         
+        /* ===== 记录页 ===== */
         function renderRecordForm(){
           const sel=document.getElementById('r-session');
           sel.innerHTML='<option value="">请选择节次</option>';
-          for(let i=1;i<=20;i++){
-            const exists=lessons.find(l=>l.session===i);
+          for(let i=1;i<=TOTAL_SESSIONS;i++){
+            const exists=stu().lessons.find(l=>l.session===i);
             const opt=document.createElement('option');
             opt.value=i;
-            opt.textContent=`第${i}节课`+(exists?' ✓':'');
+            opt.textContent=`第${i}节课`+(exists?' ✓已记录':'');
             sel.appendChild(opt);
           }
           document.getElementById('r-date').value=new Date().toISOString().split('T')[0];
           starVals={attention:0,cooperation:0,speed:0};
-          hwStatus=0;
+          hwStatus=null;
           initStars();
-          renderKpCheckboxes();
+          document.querySelectorAll('#hw-status-group .mastery-btn').forEach(b=>b.classList.remove('sel'));
+          renderVocabCheck(null);
         }
         
-        function renderKpCheckboxes(){
-          const el=document.getElementById('r-kp-list');
-          el.innerHTML='';
-          KP_PLAN.forEach(kp=>{
-            const div=document.createElement('div');
-            div.style.cssText='display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)';
-            div.innerHTML=`
-              <span style="font-size:11px;color:var(--text-light);width:32px;flex-shrink:0">第${kp.session}节</span>
-              <span style="flex:1;font-size:14px;line-height:1.4">${kp.name}</span>
-              <select class="form-select" style="width:120px;font-size:13px;padding:8px 28px 8px 8px" id="r-kp-${kp.id}">
-                <option value="">未涉及</option>
-                <option value="0">❌未掌握</option>
-                <option value="1">⚠️部分</option>
-                <option value="2">✅掌握</option>
-              </select>`;
-            el.appendChild(div);
+        function onSessionChange(){
+          const session=parseInt(document.getElementById('r-session').value);
+          if(!session){renderVocabCheck(null);return;}
+          renderVocabCheck(session);
+          // 如果该节已有记录，载入旧数据方便修改
+          const old=stu().lessons.find(l=>l.session===session);
+          if(old){
+            document.getElementById('r-date').value=old.date||'';
+            document.getElementById('r-topic').value=old.topic||'';
+            document.getElementById('r-content').value=old.content||'';
+            document.getElementById('r-performance').value=old.performance||'';
+            document.getElementById('r-hw').value=old.hw||'';
+            document.getElementById('r-summary').value=old.summary||'';
+            document.getElementById('r-nextplan').value=old.nextPlan||'';
+            starVals={attention:old.attention||0,cooperation:old.cooperation||0,speed:old.speed||0};
+            hwStatus=(old.hwStatus===0||old.hwStatus===1||old.hwStatus===2)?old.hwStatus:null;
+            initStars();
+            document.querySelectorAll('#hw-status-group .mastery-btn').forEach(b=>{
+              b.classList.toggle('sel',parseInt(b.dataset.val)===hwStatus);
+            });
+          }
+        }
+        
+        /* 词汇勾选检查：显示上一节课录入的新词 */
+        function renderVocabCheck(session){
+          const card=document.getElementById('vcheck-card');
+          vcheckState={};
+          if(!session||session<=1){card.style.display='none';return;}
+          const prevWords=stu().vocab.filter(v=>v.session===session-1);
+          if(!prevWords.length){card.style.display='none';return;}
+          card.style.display='block';
+          document.getElementById('vcheck-hint').textContent=`第${session-1}节课录入了${prevWords.length}个词，逐个检查：`;
+          const list=document.getElementById('vcheck-list');
+          list.innerHTML='';
+          prevWords.forEach(v=>{
+            vcheckState[v.word]=null;
+            const row=document.createElement('div');
+            row.className='vcheck-row';
+            row.innerHTML=`
+              <div class="vcheck-word">${v.word}<small>${v.meaning||''}</small></div>
+              <div class="vcheck-toggle">
+                <button class="vcheck-btn ok" onclick="setVcheck('${v.word.replace(/'/g,"\\'")}','ok',this)">记住了</button>
+                <button class="vcheck-btn err" onclick="setVcheck('${v.word.replace(/'/g,"\\'")}','err',this)">没记住</button>
+              </div>`;
+            list.appendChild(row);
           });
+        }
+        function setVcheck(word,val,btn){
+          vcheckState[word]=val;
+          const row=btn.closest('.vcheck-row');
+          row.querySelectorAll('.vcheck-btn').forEach(b=>b.classList.remove('sel'));
+          btn.classList.add('sel');
         }
         
         function clearForm(){
-          ['r-topic','r-class-note','r-new-vocab','r-error-vocab','r-hw','r-summary'].forEach(id=>document.getElementById(id).value='');
-          starVals={attention:0,cooperation:0,speed:0};hwStatus=0;
+          ['r-topic','r-content','r-performance','r-new-vocab','r-error-vocab','r-hw','r-summary','r-nextplan'].forEach(id=>document.getElementById(id).value='');
+          starVals={attention:0,cooperation:0,speed:0};hwStatus=null;
           initStars();
           document.querySelectorAll('#hw-status-group .mastery-btn').forEach(b=>b.classList.remove('sel'));
-          renderKpCheckboxes();
+          document.getElementById('r-session').value='';
+          renderVocabCheck(null);
         }
         
         function saveLesson(){
@@ -605,12 +754,16 @@
           const date=document.getElementById('r-date').value;
           const topic=document.getElementById('r-topic').value.trim();
           if(!session||!date||!topic){alert('请填写节次、日期和主题');return;}
-          const kpUpdates={};
-          KP_PLAN.forEach(kp=>{
-            const val=document.getElementById('r-kp-'+kp.id).value;
-            if(val!=='')kpUpdates[kp.id]=parseInt(val);
+          const s=stu();
+        
+          // 应用词汇勾选结果
+          Object.entries(vcheckState).forEach(([word,val])=>{
+            if(!val)return;
+            const v=s.vocab.find(x=>x.word.toLowerCase()===word.toLowerCase());
+            if(v)v.status=(val==='ok')?'ok':'err';
           });
-          Object.assign(kpStatus,kpUpdates);save('kpStatus',kpStatus);
+        
+          // 新词录入
           const newVStr=document.getElementById('r-new-vocab').value;
           let newVCount=0;
           if(newVStr.trim()){
@@ -618,44 +771,84 @@
               const parts=item.trim().split(/\s+/);
               const word=parts[0].trim();
               const meaning=parts.slice(1).join(' ').trim()||'';
-              if(word&&!vocab.find(v=>v.word.toLowerCase()===word.toLowerCase())){
-                vocab.push({word,meaning,status:'new',session,date});newVCount++;
+              if(word&&!s.vocab.find(v=>v.word.toLowerCase()===word.toLowerCase())){
+                s.vocab.push({word,meaning,status:'new',session,date});newVCount++;
               }
             });
           }
+          // 补充错词
           const errStr=document.getElementById('r-error-vocab').value;
           if(errStr.trim()){
             errStr.split(',').forEach(w=>{
               const word=w.trim();
-              const ex=vocab.find(v=>v.word.toLowerCase()===word.toLowerCase());
+              const ex=s.vocab.find(v=>v.word.toLowerCase()===word.toLowerCase());
               if(ex)ex.status='err';
-              else if(word)vocab.push({word,meaning:'',status:'err',session,date});
+              else if(word)s.vocab.push({word,meaning:'',status:'err',session,date});
             });
           }
-          save('vocab',vocab);
-          const lesson={session,date,topic,attention:starVals.attention,cooperation:starVals.cooperation,speed:starVals.speed,classNote:document.getElementById('r-class-note').value,hw:document.getElementById('r-hw').value,hwStatus,summary:document.getElementById('r-summary').value,kpUpdates,newVocabCount:newVCount};
-          const idx=lessons.findIndex(l=>l.session===session);
-          if(idx>=0)lessons[idx]=lesson;else lessons.push(lesson);
-          lessons.sort((a,b)=>a.session-b.session);
-          save('lessons',lessons);
+        
+          // 同步知识点清单：把主题写进对应节次（若该节名称为空）
+          const kp=s.kpList[session-1];
+          if(kp&&!kp.name)kp.name=topic;
+        
+          const lesson={
+            session,date,topic,
+            content:document.getElementById('r-content').value,
+            attention:starVals.attention,cooperation:starVals.cooperation,speed:starVals.speed,
+            performance:document.getElementById('r-performance').value,
+            hw:document.getElementById('r-hw').value,
+            hwStatus,
+            summary:document.getElementById('r-summary').value,
+            nextPlan:document.getElementById('r-nextplan').value,
+            newVocabCount:newVCount,
+            vocabCheck:{...vcheckState}
+          };
+          const idx=s.lessons.findIndex(l=>l.session===session);
+          if(idx>=0)lessons_replace(s,idx,lesson);else s.lessons.push(lesson);
+          s.lessons.sort((a,b)=>a.session-b.session);
+          persist();
           alert(`✅ 第${session}节课已保存！`);
           clearForm();
         }
+        function lessons_replace(s,idx,lesson){
+          // 保留旧记录里的新词计数（重复保存时不重复+）
+          s.lessons[idx]=lesson;
+        }
         
+        /* ===== 总览 ===== */
         function renderOverview(){
-          document.getElementById('s-lessons').textContent=lessons.length;
-          document.getElementById('s-mastered').textContent=Object.values(kpStatus).filter(v=>v===2).length;
-          document.getElementById('s-vocab').textContent=vocab.filter(v=>v.status!=='err').length;
-          document.getElementById('s-errors').textContent=vocab.filter(v=>v.status==='err').length;
+          const s=stu();
+          document.getElementById('s-lessons').textContent=s.lessons.length;
+          document.getElementById('s-mastered').textContent=s.kpList.filter(k=>k.status===2).length;
+          document.getElementById('s-vocab').textContent=s.vocab.filter(v=>v.status!=='err').length;
+          document.getElementById('s-errors').textContent=s.vocab.filter(v=>v.status==='err').length;
+        
+          // 作业完成率（hwStatus记录的是"上节作业"，第一节课通常没有）
+          const hwRecords=s.lessons.filter(l=>l.hwStatus===0||l.hwStatus===1||l.hwStatus===2);
+          if(hwRecords.length){
+            const score=hwRecords.reduce((sum,l)=>sum+l.hwStatus/2,0);
+            const rate=Math.round(score/hwRecords.length*100);
+            document.getElementById('hw-rate').textContent=rate+'%';
+            document.getElementById('hw-bar').style.width=rate+'%';
+            const full=hwRecords.filter(l=>l.hwStatus===2).length;
+            const part=hwRecords.filter(l=>l.hwStatus===1).length;
+            const none=hwRecords.filter(l=>l.hwStatus===0).length;
+            document.getElementById('hw-summary').textContent=`已检查${hwRecords.length}次：完成${full}次 · 部分${part}次 · 未完成${none}次`;
+          }else{
+            document.getElementById('hw-rate').textContent='—';
+            document.getElementById('hw-bar').style.width='0%';
+            document.getElementById('hw-summary').textContent='还没有作业检查记录';
+          }
+        
           renderPerfChart();renderKpChart();
           const el=document.getElementById('recent-list');
-          if(!lessons.length){el.innerHTML='<div class="empty"><div class="empty-icon">📝</div><div class="empty-text">还没有记录<br>去"记录"页面开始吧</div></div>';return;}
-          el.innerHTML=[...lessons].reverse().slice(0,3).map(l=>`
-            <div style="padding:10px 0;border-bottom:1px solid var(--border)">
+          if(!s.lessons.length){el.innerHTML='<div class="empty"><div class="empty-icon">📝</div><div class="empty-text">还没有记录<br>去"记录"页面开始吧</div></div>';return;}
+          el.innerHTML=[...s.lessons].reverse().slice(0,3).map(l=>`
+            <div style="padding:10px 0;border-bottom:1px solid var(--border)" onclick="openDetail(${l.session})">
               <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
                 <div class="lesson-num-badge">第${l.session}节</div>
                 <div style="font-size:12px;color:var(--text-light)">${l.date}</div>
-                <div style="margin-left:auto;font-size:13px">${'★'.repeat(Math.round((l.attention+l.cooperation+l.speed)/3))}</div>
+                <div style="margin-left:auto;font-size:13px">${'★'.repeat(Math.round(((l.attention||0)+(l.cooperation||0)+(l.speed||0))/3))}</div>
               </div>
               <div style="font-size:14px;font-weight:600">${l.topic}</div>
               ${l.summary?`<div style="font-size:12px;color:var(--text-mid);margin-top:4px">💬 ${l.summary}</div>`:''}
@@ -666,49 +859,72 @@
         function renderPerfChart(){
           const ctx=document.getElementById('chart-perf');
           if(charts.perf)charts.perf.destroy();
-          if(!lessons.length)return;
-          charts.perf=new Chart(ctx,{type:'line',data:{labels:lessons.map(l=>`${l.session}节`),datasets:[
-            {label:'专注',data:lessons.map(l=>l.attention||0),borderColor:'#2D5A8E',tension:0.3,fill:false},
-            {label:'配合',data:lessons.map(l=>l.cooperation||0),borderColor:'#34C759',tension:0.3,fill:false},
-            {label:'理解',data:lessons.map(l=>l.speed||0),borderColor:'#E8734A',tension:0.3,fill:false},
+          const ls=stu().lessons;
+          if(!ls.length)return;
+          charts.perf=new Chart(ctx,{type:'line',data:{labels:ls.map(l=>`${l.session}节`),datasets:[
+            {label:'专注',data:ls.map(l=>l.attention||0),borderColor:'#2D5A8E',tension:0.3,fill:false},
+            {label:'配合',data:ls.map(l=>l.cooperation||0),borderColor:'#34C759',tension:0.3,fill:false},
+            {label:'理解',data:ls.map(l=>l.speed||0),borderColor:'#E8734A',tension:0.3,fill:false},
           ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:11},boxWidth:12}}},scales:{y:{min:0,max:5,ticks:{stepSize:1,font:{size:11}}}}}});
         }
         
         function renderKpChart(){
           const ctx=document.getElementById('chart-kp');
           if(charts.kp)charts.kp.destroy();
-          const m=Object.values(kpStatus).filter(v=>v===2).length;
-          const p=Object.values(kpStatus).filter(v=>v===1).length;
-          charts.kp=new Chart(ctx,{type:'doughnut',data:{labels:['已掌握','部分掌握','未学'],datasets:[{data:[m,p,20-m-p],backgroundColor:['#34C759','#FF9500','#E5E5EA'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{font:{size:11},boxWidth:12}}}}});
+          const s=stu();
+          const m=s.kpList.filter(k=>k.status===2).length;
+          const p=s.kpList.filter(k=>k.status===1).length;
+          charts.kp=new Chart(ctx,{type:'doughnut',data:{labels:['已掌握','部分掌握','未学'],datasets:[{data:[m,p,TOTAL_SESSIONS-m-p],backgroundColor:['#34C759','#FF9500','#E5E5EA'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'bottom',labels:{font:{size:11},boxWidth:12}}}}});
         }
         
+        /* ===== 知识点 ===== */
         function renderKpList(){
           const el=document.getElementById('kp-list');el.innerHTML='';
+          const s=stu();
           let mc=0;
-          [1,2,3].forEach(ph=>{
-            const card=document.createElement('div');card.className='card';
-            card.innerHTML=`<div class="kp-phase-label p${ph}">${PHASE_NAMES[ph]}</div><div id="kpp${ph}"></div>`;
-            el.appendChild(card);
-            const cont=card.querySelector(`#kpp${ph}`);
-            KP_PLAN.filter(k=>k.phase===ph).forEach(kp=>{
-              const st=kpStatus[kp.id];
-              if(st===2)mc++;
-              const item=document.createElement('div');
-              item.className=`kp-item${st===2?' mastered':st===1?' partial':''}`;
-              item.onclick=()=>openKpModal(kp.id,kp.name);
-              item.innerHTML=`<div class="kp-check">${st===2?'✓':st===1?'~':''}</div><div class="kp-name">${kp.name}</div><div class="kp-session">第${kp.session}节</div>`;
-              cont.appendChild(item);
-            });
+          s.kpList.forEach((kp,i)=>{
+            if(kp.status===2)mc++;
+            const item=document.createElement('div');
+            item.className=`kp-item${kp.status===2?' mastered':kp.status===1?' partial':''}`;
+            item.onclick=()=>openKpModal(i);
+            item.innerHTML=`
+              <div class="kp-check">${kp.status===2?'✓':kp.status===1?'~':''}</div>
+              <div class="kp-name${kp.name?'':' placeholder'}">${kp.name||'点击填写本节内容'}</div>
+              <div class="kp-session">第${kp.session}节</div>`;
+            el.appendChild(item);
           });
-          const pct=Math.round(mc/20*100);
+          const pct=Math.round(mc/TOTAL_SESSIONS*100);
           document.getElementById('kp-pct').textContent=pct+'%';
           document.getElementById('kp-bar').style.width=pct+'%';
         }
         
-        function openKpModal(id,name){currentKpId=id;document.getElementById('kp-modal-title').textContent=name;document.getElementById('kp-modal').classList.add('open');}
+        function openKpModal(idx){
+          currentKpIdx=idx;
+          const kp=stu().kpList[idx];
+          kpModalStatus=kp.status;
+          document.getElementById('kp-modal-title').textContent=`第${kp.session}节课`;
+          document.getElementById('kp-name-input').value=kp.name||'';
+          document.querySelectorAll('#kp-status-group .mastery-btn').forEach(b=>{
+            b.classList.toggle('sel',parseInt(b.dataset.val)===kp.status);
+          });
+          document.getElementById('kp-modal').classList.add('open');
+        }
+        function selKpStatus(el,val){
+          kpModalStatus=val;
+          el.parentElement.querySelectorAll('.mastery-btn').forEach(b=>b.classList.remove('sel'));
+          el.classList.add('sel');
+        }
         function closeKpModal(){document.getElementById('kp-modal').classList.remove('open');}
-        function setKpStatus(val){if(!currentKpId)return;kpStatus[currentKpId]=val;save('kpStatus',kpStatus);closeKpModal();renderKpList();}
+        function saveKp(){
+          if(currentKpIdx===null)return;
+          const kp=stu().kpList[currentKpIdx];
+          kp.name=document.getElementById('kp-name-input').value.trim();
+          kp.status=kpModalStatus;
+          persist();
+          closeKpModal();renderKpList();
+        }
         
+        /* ===== 词汇 ===== */
         function filterVocab(f){
           vocabFilter=f;
           ['all','new','ok','err'].forEach(k=>{
@@ -720,11 +936,12 @@
         }
         
         function renderVocab(){
-          const list=vocabFilter==='all'?vocab:vocab.filter(v=>v.status===vocabFilter);
+          const s=stu();
+          const list=vocabFilter==='all'?s.vocab:s.vocab.filter(v=>v.status===vocabFilter);
           const grid=document.getElementById('vocab-grid');
           if(!list.length){grid.innerHTML='<div style="color:var(--text-light);font-size:14px;padding:20px 0;grid-column:1/-1">暂无词汇</div>';return;}
-          grid.innerHTML=list.map((v,i)=>{
-            const ri=vocab.indexOf(v);
+          grid.innerHTML=list.map(v=>{
+            const ri=s.vocab.indexOf(v);
             return`<div class="vocab-card">
               <div class="vocab-word">${v.word}</div>
               <div class="vocab-meaning">${v.meaning||'—'}</div>
@@ -739,7 +956,7 @@
           }).join('');
         }
         
-        function updateVocabStatus(idx,val){vocab[idx].status=val;save('vocab',vocab);renderVocab();}
+        function updateVocabStatus(idx,val){stu().vocab[idx].status=val;persist();renderVocab();}
         
         function openVocabModal(){document.getElementById('vocab-modal').classList.add('open');}
         function closeVocabModal(){document.getElementById('vocab-modal').classList.remove('open');}
@@ -748,39 +965,132 @@
           const meaning=document.getElementById('v-meaning').value.trim();
           const status=document.getElementById('v-status').value;
           if(!word){alert('请输入单词');return;}
-          if(vocab.find(v=>v.word.toLowerCase()===word.toLowerCase())){alert('词库里已有这个词');return;}
-          vocab.push({word,meaning,status,session:null,date:new Date().toISOString().split('T')[0]});
-          save('vocab',vocab);
+          const s=stu();
+          if(s.vocab.find(v=>v.word.toLowerCase()===word.toLowerCase())){alert('词库里已有这个词');return;}
+          s.vocab.push({word,meaning,status,session:null,date:new Date().toISOString().split('T')[0]});
+          persist();
           document.getElementById('v-word').value='';document.getElementById('v-meaning').value='';
           closeVocabModal();renderVocab();
         }
         
+        /* ===== 历史 & 详情 ===== */
         function renderHistory(){
           const el=document.getElementById('history-list');
-          if(!lessons.length){el.innerHTML='<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">还没有记录</div></div>';return;}
-          el.innerHTML=[...lessons].reverse().map(l=>{
-            const avg=((l.attention+l.cooperation+l.speed)/3).toFixed(1);
-            const masteredKps=Object.entries(l.kpUpdates||{}).filter(([,v])=>v===2).map(([id])=>KP_PLAN.find(k=>k.id===id)?.name).filter(Boolean);
-            return`<div class="lesson-hist-card">
+          const ls=stu().lessons;
+          if(!ls.length){el.innerHTML='<div class="empty"><div class="empty-icon">📋</div><div class="empty-text">还没有记录</div></div>';return;}
+          el.innerHTML=[...ls].reverse().map(l=>{
+            const avg=(((l.attention||0)+(l.cooperation||0)+(l.speed||0))/3).toFixed(1);
+            return`<div class="lesson-hist-card" onclick="openDetail(${l.session})">
               <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
                 <div class="lesson-num-badge">第${l.session}节</div>
                 <div style="font-size:12px;color:var(--text-light)">${l.date}</div>
                 <div style="margin-left:auto;font-size:13px;font-weight:700">${avg}⭐</div>
               </div>
               <div style="font-size:16px;font-weight:700;margin-bottom:8px">${l.topic}</div>
-              ${l.summary?`<div style="background:var(--blue-light);padding:10px 12px;border-radius:10px;font-size:13px;color:var(--blue);margin-bottom:8px">💬 "${l.summary}"</div>`:''}
               <div style="display:flex;gap:6px;flex-wrap:wrap">
-                <span class="tag blue">专注${l.attention}⭐</span>
-                <span class="tag blue">配合${l.cooperation}⭐</span>
-                <span class="tag ${l.hwStatus===2?'green':l.hwStatus===1?'yellow':'red'}">${l.hwStatus===2?'✅作业完':l.hwStatus===1?'⚠️部分完':'❌未完成'}</span>
+                <span class="tag blue">专注${l.attention||0}⭐</span>
+                <span class="tag blue">配合${l.cooperation||0}⭐</span>
+                ${(l.hwStatus===0||l.hwStatus===1||l.hwStatus===2)?`<span class="tag ${l.hwStatus===2?'green':l.hwStatus===1?'yellow':'red'}">${l.hwStatus===2?'✅作业完':l.hwStatus===1?'⚠️部分完':'❌未完成'}</span>`:''}
                 ${l.newVocabCount?`<span class="tag green">+${l.newVocabCount}新词</span>`:''}
               </div>
-              ${masteredKps.length?`<div style="margin-top:8px;font-size:12px;color:var(--green-dark)">✓ ${masteredKps.join('、')}</div>`:''}
-              ${l.hw?`<div style="margin-top:8px;font-size:12px;color:var(--text-mid)">📋 ${l.hw}</div>`:''}
+              <div class="hist-link"><span>查看完整详情（家长反馈）</span><span>›</span></div>
             </div>`;
           }).join('');
         }
         
+        function fmtField(txt){
+          return txt&&txt.trim()?`<div class="detail-content">${escHtml(txt.trim())}</div>`:`<div class="detail-content empty-field">未填写</div>`;
+        }
+        function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+        
+        function openDetail(session){
+          const l=stu().lessons.find(x=>x.session===session);
+          if(!l)return;
+          const stars=f=>'★'.repeat(l[f]||0)+'☆'.repeat(5-(l[f]||0));
+          const hwTxt=l.hwStatus===2?'✅ 已完成':l.hwStatus===1?'⚠️ 部分完成':l.hwStatus===0?'❌ 未完成':'未记录';
+          // 词汇检查结果
+          let vcheckHtml='';
+          if(l.vocabCheck&&Object.keys(l.vocabCheck).length){
+            const oks=Object.entries(l.vocabCheck).filter(([,v])=>v==='ok').map(([w])=>w);
+            const errs=Object.entries(l.vocabCheck).filter(([,v])=>v==='err').map(([w])=>w);
+            if(oks.length||errs.length){
+              vcheckHtml=`<div class="detail-section">
+                <div class="detail-section-title">✅ 上节词汇检查</div>
+                <div class="detail-content">${oks.length?'记住了：'+oks.join('、'):''}${oks.length&&errs.length?'\n':''}${errs.length?'没记住：'+errs.join('、'):''}</div>
+              </div>`;
+            }
+          }
+          document.getElementById('detail-body').innerHTML=`
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+              <div class="lesson-num-badge" style="font-size:14px;padding:5px 14px">第${l.session}节课</div>
+              <div style="font-size:14px;color:var(--text-mid)">${l.date}</div>
+            </div>
+            <div style="font-size:18px;font-weight:700;margin-bottom:16px">${escHtml(l.topic)}</div>
+        
+            <div class="detail-section">
+              <div class="detail-section-title">📄 上课内容</div>
+              ${fmtField(l.content)}
+            </div>
+        
+            <div class="detail-section">
+              <div class="detail-section-title">🌟 课堂表现及掌握程度</div>
+              <div class="detail-content" style="margin-bottom:8px">专注度 ${stars('attention')}\n配合度 ${stars('cooperation')}\n理解速度 ${stars('speed')}</div>
+              ${fmtField(l.performance)}
+            </div>
+        
+            ${vcheckHtml}
+        
+            <div class="detail-section">
+              <div class="detail-section-title">📋 作业布置</div>
+              ${fmtField(l.hw)}
+            </div>
+        
+            <div class="detail-section">
+              <div class="detail-section-title">📝 上节作业完成情况</div>
+              <div class="detail-content">${hwTxt}</div>
+            </div>
+        
+            ${l.summary&&l.summary.trim()?`<div class="detail-section">
+              <div class="detail-section-title">💬 她说今天学会了</div>
+              ${fmtField(l.summary)}
+            </div>`:''}
+        
+            ${l.nextPlan&&l.nextPlan.trim()?`<div class="detail-section">
+              <div class="detail-section-title">📌 下节课计划</div>
+              ${fmtField(l.nextPlan)}
+            </div>`:''}
+          `;
+          document.getElementById('detail-modal').classList.add('open');
+        }
+        function closeDetailModal(){document.getElementById('detail-modal').classList.remove('open');}
+        
+        /* ===== 备份 ===== */
+        function exportData(){
+          const payload='TRACKER_BACKUP_V2:'+btoa(unescape(encodeURIComponent(JSON.stringify(appData))));
+          document.getElementById('export-text').value=payload;
+          document.getElementById('export-modal').classList.add('open');
+        }
+        function closeExportModal(){document.getElementById('export-modal').classList.remove('open');}
+        function openImportModal(){document.getElementById('import-modal').classList.add('open');}
+        function closeImportModal(){document.getElementById('import-modal').classList.remove('open');}
+        function importData(){
+          const txt=document.getElementById('import-text').value.trim();
+          if(!txt.startsWith('TRACKER_BACKUP_V2:')){alert('备份文本格式不对，请检查是否复制完整');return;}
+          try{
+            const json=decodeURIComponent(escape(atob(txt.slice('TRACKER_BACKUP_V2:'.length))));
+            const d=JSON.parse(json);
+            if(!d.version||!d.students)throw new Error('bad');
+            appData=d;
+            persist();
+            alert('✅ 数据已恢复！');
+            closeImportModal();
+            renderOverview();
+          }catch(e){
+            alert('导入失败，备份文本可能不完整或已损坏');
+          }
+        }
+        
+        /* ===== 启动 ===== */
         renderOverview();renderRecordForm();
     </script>
 </body>
